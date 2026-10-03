@@ -86,6 +86,7 @@
 		<assets path='example_mods' rename='mods' embed='false'/>
 	</section>
 	<assets path='art/readme.txt' rename='do NOT readme.txt' unless="mobile"/>
+	<assets path="assets" include="*.astc" type="image" if="android"/>	
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
