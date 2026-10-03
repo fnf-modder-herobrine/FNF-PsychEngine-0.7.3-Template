@@ -141,8 +141,31 @@ class Character extends FlxSprite
 		scale.set(1, 1);
 		updateHitbox();
 
-		if(!isAnimateAtlas)
-			frames = Paths.getAtlas(json.image);
+				if(!isAnimateAtlas)
+		{
+			if (json.images != null && Std.isOfType(json.images, Array) && json.images.length > 0) 
+			{
+				var firstAtlas = Paths.getAtlas(json.images[0]); // Corrigido para pegar o primeiro item [0] da lista
+				if (firstAtlas != null) 
+				{
+					var multiFrames = new MultiFramesCollection(firstAtlas.parent);
+					multiFrames.addFrames(firstAtlas);
+
+					for (i in 1...json.images.length) 
+					{
+						var extraAtlas = Paths.getAtlas(json.images[i]);
+						if (extraAtlas != null) {
+							multiFrames.addFrames(extraAtlas);
+						}
+					}
+					frames = multiFrames;
+				}
+			} 
+			else 
+			{
+				frames = Paths.getAtlas(json.image);
+			}
+		}
 		#if flxanimate
 		else
 		{
