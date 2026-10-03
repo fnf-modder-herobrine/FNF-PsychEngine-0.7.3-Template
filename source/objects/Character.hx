@@ -21,6 +21,7 @@ typedef AnimArray = {
 	var loop:Bool;
 	var indices:Array<Int>;
 	var offsets:Array<Int>;
+	@:optional var poseScale:Float;
 }
 
 typedef CharacterFile = {
@@ -385,11 +386,27 @@ class Character extends FlxSprite
 		}
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+		public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		specialAnim = false;
 		if(!isAnimateAtlas) animation.play(AnimName, Force, Reversed, Frame);
 		else atlas.anim.play(AnimName, Force, Reversed, Frame);
+
+		// [NOVO] Lógica do Scale Pose Dinâmico
+		var appliedScale:Float = jsonScale; // Usa a escala base do personagem como padrão
+		for (anim in animationsArray) {
+			if (anim.anim == AnimName) {
+				// Se a pose atual tiver uma escala específica maior que zero, usa ela
+				if (anim.poseScale != null && anim.poseScale > 0) {
+					appliedScale = anim.poseScale;
+				}
+				break;
+			}
+		}
+		
+		// Aplica a escala na Sprite (e no Atlas se necessário) e ajusta a caixa de colisão física
+		scale.set(appliedScale, appliedScale);
+		updateHitbox(); 
 
 		if (animOffsets.exists(AnimName))
 		{
@@ -410,7 +427,7 @@ class Character extends FlxSprite
 				danced = !danced;
 		}
 	}
-
+	
 	function loadMappedAnims():Void
 	{
 		try
