@@ -12,6 +12,7 @@ import haxe.Json;
 import backend.Song;
 import backend.Section;
 import states.stages.objects.TankmenBG;
+import backend.MultiFramesCollection;
 
 typedef CharacterFile = {
 	var animations:Array<AnimArray>;
@@ -26,17 +27,9 @@ typedef CharacterFile = {
 	var flip_x:Bool;
 	var no_antialiasing:Bool;
 	var healthbar_colors:Array<Int>;
-	var vocals_file:String;
-	@:optional var _editor_isPlayer:Null<Bool>;
-}
-
-typedef AnimArray = {
-	var anim:String;
-	var name:String;
-	var fps:Int;
-	var loop:Bool;
-	var indices:Array<Int>;
-	var offsets:Array<Int>;
+	
+	// Adicione esta linha bem aqui embaixo:
+	var ?images:Array<String>; 
 }
 
 class Character extends FlxSprite
