@@ -2,7 +2,7 @@ package backend; // Ajustado para o padrão da 0.7.3
 
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FlxFrameCollectionType;
+// import flixel.graphics.frames.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
 
 /**
