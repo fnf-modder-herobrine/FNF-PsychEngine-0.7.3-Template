@@ -36,6 +36,7 @@ typedef CharacterFile = {
 	var flip_x:Bool;
 	var no_antialiasing:Bool;
 	var healthbar_colors:Array<Int>;
+	var vocals_file:String;
 	var ?images:Array<String>; // A nossa linha que adicionamos antes
 }
 class Character extends FlxSprite
