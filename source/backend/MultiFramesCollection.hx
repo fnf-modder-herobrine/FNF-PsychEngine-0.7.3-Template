@@ -31,10 +31,10 @@ class MultiFramesCollection extends FlxFramesCollection
 		return null;
 	}
 
-	public function addFrames(collection:FlxFramesCollection) {
+		public function addFrames(collection:FlxFramesCollection) {
 		if (collection == null || collection.frames == null) return;
 
-		if(collection.parent != null) collection.parent.useCount++;
+		// Removido o useCount++ direto para evitar o bloqueio de escrita do Flixel
 		parentedFrames.push(collection);
 
 		for(f in collection.frames) {
@@ -48,12 +48,7 @@ class MultiFramesCollection extends FlxFramesCollection
 	public override function destroy():Void
 	{
 		if(parentedFrames != null) {
-			for(collection in parentedFrames) {
-				if(collection != null && collection.parent != null)
-					collection.parent.useCount--;
-			}
 			parentedFrames = null;
 		}
 		super.destroy();
 	}
-}
