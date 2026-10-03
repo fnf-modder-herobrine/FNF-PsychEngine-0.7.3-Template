@@ -14,6 +14,15 @@ import backend.Section;
 import states.stages.objects.TankmenBG;
 import backend.MultiFramesCollection;
 
+typedef AnimArray = {
+	var anim:String;
+	var name:String;
+	var fps:Int;
+	var loop:Bool;
+	var indices:Array<Int>;
+	var offsets:Array<Int>;
+}
+
 typedef CharacterFile = {
 	var animations:Array<AnimArray>;
 	var image:String;
@@ -27,11 +36,8 @@ typedef CharacterFile = {
 	var flip_x:Bool;
 	var no_antialiasing:Bool;
 	var healthbar_colors:Array<Int>;
-	
-	// Adicione esta linha bem aqui embaixo:
-	var ?images:Array<String>; 
+	var ?images:Array<String>; // A nossa linha que adicionamos antes
 }
-
 class Character extends FlxSprite
 {
 	/**
