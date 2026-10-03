@@ -52,3 +52,4 @@ class MultiFramesCollection extends FlxFramesCollection
 		}
 		super.destroy();
 	}
+}
