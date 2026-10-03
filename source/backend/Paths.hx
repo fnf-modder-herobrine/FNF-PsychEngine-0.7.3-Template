@@ -219,7 +219,7 @@ class Paths
 		return inst;
 	}
 
-	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
+		public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxGraphic
 	{
 		var bitmap:BitmapData = null;
@@ -227,6 +227,15 @@ class Paths
 
 		#if MODS_ALLOWED
 		file = modsImages(key);
+		
+		#if android
+		// 1. MODS (Android): Se houver um arquivo .astc na pasta de mods, prioriza ele
+		var astcModFile:String = StringTools.replace(file, '.png', '.astc');
+		if (FileSystem.exists(astcModFile)) {
+			file = astcModFile;
+		}
+		#end
+
 		if (currentTrackedAssets.exists(file))
 		{
 			localTrackedAssets.push(file);
@@ -238,6 +247,15 @@ class Paths
 		#end
 		{
 			file = getPath('images/$key.png', IMAGE, library);
+
+			#if android
+			// 2. APK ASSETS (Android): Se houver um asset .astc compilado no jogo, prioriza ele
+			var astcAssetFile:String = getPath('images/$key.astc', IMAGE, library);
+			if (OpenFlAssets.exists(astcAssetFile, IMAGE)) {
+				file = astcAssetFile;
+			}
+			#end
+
 			if (currentTrackedAssets.exists(file))
 			{
 				localTrackedAssets.push(file);
@@ -256,6 +274,7 @@ class Paths
 		trace('oh no its returning null NOOOO ($file)');
 		return null;
 	}
+
 
 	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = true)
 	{
