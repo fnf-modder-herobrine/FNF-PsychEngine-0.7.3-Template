@@ -191,7 +191,7 @@ class Character extends FlxSprite
 			}
 		}
 		#if flxanimate
-		else
+		#else
 		{
 			atlas = new FlxAnimate();
 			atlas.showPivot = false;
