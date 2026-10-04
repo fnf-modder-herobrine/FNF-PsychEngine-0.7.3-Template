@@ -152,11 +152,24 @@ class Character extends FlxSprite
 		scale.set(1, 1);
 		updateHitbox();
 
-				if(!isAnimateAtlas)
+					// Forçamos a checagem para ver se o JSON manda ativar o Atlas
+		isAnimateAtlas = (json.scale_atlas == true);
+
+		if(isAnimateAtlas)
 		{
+			// O FlxAnimate precisa ler a pasta inteira onde estão o Animation.json e o spritemap1.json
+			// Paths.getPath('images/' + json.image, TEXT) faz a engine ler o caminho como uma pasta de texto/assets
+			atlasSprite = new flxanimate.FlxAnimate(0, 0, Paths.getPath('images/' + json.image, TEXT));
+			
+			// Passamos os frames gerados pelo FlxAnimate para o esqueleto do personagem
+			frames = atlasSprite.frames;
+		}
+		else
+		{
+			// O SEU SISTEMA DE MULTI-SPRITESHEETS CONTINUA AQUI INTACTO:
 			if (json.images != null && Std.isOfType(json.images, Array) && json.images.length > 0) 
 			{
-				var firstAtlas = Paths.getAtlas(json.images[0]); // Corrigido para pegar o primeiro item [0] da lista
+				var firstAtlas = Paths.getAtlas(json.images[0]);
 				if (firstAtlas != null) 
 				{
 					var multiFrames = new MultiFramesCollection(firstAtlas.parent);
@@ -393,7 +406,7 @@ class Character extends FlxSprite
 	{
 		specialAnim = false;
 		if(!isAnimateAtlas) animation.play(AnimName, Force, Reversed, Frame);
-		else atlas.anim.play(AnimName, Force, Reversed, Frame);
+		else atlasSprite.anim.play(AnimName, Force, Reversed, Frame);
 
 		// [NOVO] Lógica do Scale Pose Dinâmico
 		var appliedScale:Float = jsonScale; // Usa a escala base do personagem como padrão
