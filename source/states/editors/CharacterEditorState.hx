@@ -1447,3 +1447,4 @@ class CharacterEditorState extends MusicBeatState
 		#end
 	}
 }
+}	
