@@ -13,6 +13,7 @@ import backend.Song;
 import backend.Section;
 import states.stages.objects.TankmenBG;
 import backend.MultiFramesCollection;
+import flxanimate.FlxAnimate;
 
 typedef AnimArray = {
 	var anim:String;
@@ -52,6 +53,8 @@ class Character extends FlxSprite
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	public var isPlayer:Bool = false;
+	public var isAnimateAtlas:Bool = false;
+    public var atlasSprite:FlxAnimate = null;
 	public var curCharacter:String = DEFAULT_CHARACTER;
 
 	public var holdTimer:Float = 0;
