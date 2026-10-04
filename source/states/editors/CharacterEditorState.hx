@@ -740,7 +740,24 @@ class CharacterEditorState extends MusicBeatState
 			else if(sender == vocalsInputText)
 				character.vocalsFile = vocalsInputText.text;
 			else if(sender == imageInputText)
-				character.imageFile = imageInputText.text;
+			{
+				var rawText:String = imageInputText.text;
+				
+				if (rawText.contains(",")) 
+				{
+					var sheets:Array<String> = rawText.split(",");
+					for (i in 0...sheets.length) {
+						sheets[i] = StringTools.trim(sheets[i]);
+					}
+					character.imageFiles = sheets;
+					character.imageFile = sheets[0]; // Define a primeira como base
+				} 
+				else 
+				{
+					character.imageFile = rawText;
+					character.imageFiles = [];
+				}
+			}
 		}
 		else if(sender is FlxUINumericStepper)
 		{
@@ -751,11 +768,7 @@ class CharacterEditorState extends MusicBeatState
 				character.scale.set(character.jsonScale, character.jsonScale);
 				character.updateHitbox();
 				updatePointerPos(false);
-			}
-			else if(sender == positionXStepper)
-			{
-				character.positionArray[0] = positionXStepper.value;
-				updateCharacterPositions();
+
 			}
 			else if(sender == positionYStepper)
 			{
