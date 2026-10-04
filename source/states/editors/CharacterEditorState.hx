@@ -1374,38 +1374,43 @@ class CharacterEditorState extends MusicBeatState
 	}
 
 	function saveCharacter() {
-		if(_file != null) return;
+	if(_file != null) return;
 
-		var json:Dynamic = {
-			"animations": character.animationsArray,
-			"image": character.imageFile,
-			"scale": character.jsonScale,
-			"sing_duration": character.singDuration,
-			"healthicon": character.healthIcon,
+	var json:Dynamic = {
+		"animations": character.animationsArray,
+		"scale": character.jsonScale,
+		"sing_duration": character.singDuration,
+		"healthicon": character.healthIcon,
 
-			"position":	character.positionArray,
-			"camera_position": character.cameraPosition,
+		"position":	character.positionArray,
+		"camera_position": character.cameraPosition,
 
-			"flip_x": character.originalFlipX,
-			"no_antialiasing": character.noAntialiasing,
-			"healthbar_colors": character.healthColorArray,
-			"vocals_file": character.vocalsFile,
-			"_editor_isPlayer": character.isPlayer
-		};
+		"flip_x": character.originalFlipX,
+		"no_antialiasing": character.noAntialiasing,
+		"healthbar_colors": character.healthColorArray,
+		"vocals_file": character.vocalsFile,
+		"_editor_isPlayer": character.isPlayer
+	};
 
-		var data:String = haxe.Json.stringify(json, "\t");
+	// Checa se o personagem tem multiplas folhas guardadas na lista
+	if (character.imageFiles != null && character.imageFiles.length > 0) {
+		json.images = character.imageFiles; // Salva como Array de multiplas folhas
+	} else {
+		json.image = character.imageFile; // Salva como String comum se for folha unica
+	}
 
-		if (data.length > 0)
-		{
-			#if mobile
-			StorageUtil.saveContent('$_char.json', data);
-			#else
-			_file = new FileReference();
-			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
-			_file.addEventListener(Event.CANCEL, onSaveCancel);
-			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data, '$_char.json');
-			#end
-		}
+	var data:String = haxe.Json.stringify(json, "\t");
+
+	if (data.length > 0)
+	{
+		#if mobile
+		StorageUtil.saveContent('$_char.json', data);
+		#else
+		_file = new FileReference();
+		_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
+		_file.addEventListener(Event.CANCEL, onSaveCancel);
+		_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
+		_file.save(data, '$_char.json');
+		#end
 	}
 }
