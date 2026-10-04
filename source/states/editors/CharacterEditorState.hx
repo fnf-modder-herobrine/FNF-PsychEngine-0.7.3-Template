@@ -509,17 +509,19 @@ class CharacterEditorState extends MusicBeatState
 	var animationIndicesInputText:FlxUIInputText;
 	var animationFramerate:FlxUINumericStepper;
 	var animationLoopCheckBox:FlxUICheckBox;
-	function addAnimationsUI()
+		function addAnimationsUI()
 	{
 		var tab_group = new FlxUI(null, UI_box);
 		tab_group.name = "Animations";
-
 
 		animationInputText = new FlxUIInputText(15, 85, 80, '', 8);
 		animationNameInputText = new FlxUIInputText(animationInputText.x, animationInputText.y + 35, 150, '', 8);
 		animationIndicesInputText = new FlxUIInputText(animationNameInputText.x, animationNameInputText.y + 40, 250, '', 8);
 		animationFramerate = new FlxUINumericStepper(animationInputText.x + 170, animationInputText.y, 1, 24, 0, 240, 0);
 		animationLoopCheckBox = new FlxUICheckBox(animationNameInputText.x + 170, animationNameInputText.y - 1, null, null, "Should it Loop?", 100);
+
+		// [NOVO] Seletor da Escala da Pose
+		animationPoseScale = new FlxUINumericStepper(animationNameInputText.x + 170, animationNameInputText.y + 35, 0.05, 1, 0, 10, 2);
 
 		animationDropDown = new FlxUIDropDownMenu(15, animationInputText.y - 55, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(pressed:String) {
 			var selectedAnimation:Int = Std.parseInt(pressed);
@@ -528,6 +530,7 @@ class CharacterEditorState extends MusicBeatState
 			animationNameInputText.text = anim.name;
 			animationLoopCheckBox.checked = anim.loop;
 			animationFramerate.value = anim.fps;
+			animationPoseScale.value = (anim.poseScale != null && anim.poseScale > 0) ? anim.poseScale : 1;
 
 			var indicesStr:String = anim.indices.toString();
 			animationIndicesInputText.text = indicesStr.substr(1, indicesStr.length - 2);
@@ -546,7 +549,7 @@ class CharacterEditorState extends MusicBeatState
 			}
 
 			var lastAnim:String = (character.animationsArray[curAnim] != null) ? character.animationsArray[curAnim].anim : '';
-			var lastOffsets:Array<Int> = [0, 0];
+			var lastOffsets:Array<Int> = [];
 			for (anim in character.animationsArray)
 				if(animationInputText.text == anim.anim) {
 					lastOffsets = anim.offsets;
@@ -563,13 +566,14 @@ class CharacterEditorState extends MusicBeatState
 			addedAnim.loop = animationLoopCheckBox.checked;
 			addedAnim.indices = indices;
 			addedAnim.offsets = lastOffsets;
+			addedAnim.poseScale = animationPoseScale.value;
+
 			addAnimation(addedAnim.anim, addedAnim.name, addedAnim.fps, addedAnim.loop, addedAnim.indices);
 			character.animationsArray.push(addedAnim);
 
 			reloadAnimList();
 			@:arrayAccess curAnim = Std.int(Math.max(0, character.animationsArray.indexOf(addedAnim)));
 			character.playAnim(addedAnim.anim, true);
-			trace('Added/Updated animation: ' + animationInputText.text);
 		});
 
 		var removeButton:FlxButton = new FlxButton(180, animationIndicesInputText.y + 60, "Remove", function() {
@@ -592,7 +596,6 @@ class CharacterEditorState extends MusicBeatState
 						updateTextColors();
 					}
 					reloadAnimList();
-					trace('Removed animation: ' + animationInputText.text);
 					break;
 				}
 		});
@@ -604,12 +607,14 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.add(new FlxText(animationFramerate.x, animationFramerate.y - 18, 0, 'Framerate:'));
 		tab_group.add(new FlxText(animationNameInputText.x, animationNameInputText.y - 18, 0, 'Animation Symbol Name/Tag:'));
 		tab_group.add(new FlxText(animationIndicesInputText.x, animationIndicesInputText.y - 18, 0, 'ADVANCED - Animation Indices:'));
+		tab_group.add(new FlxText(animationPoseScale.x, animationPoseScale.y - 18, 0, 'Pose Scale:'));
 
 		tab_group.add(animationInputText);
 		tab_group.add(animationNameInputText);
 		tab_group.add(animationIndicesInputText);
 		tab_group.add(animationFramerate);
 		tab_group.add(animationLoopCheckBox);
+		tab_group.add(animationPoseScale);
 		tab_group.add(addUpdateButton);
 		tab_group.add(removeButton);
 		tab_group.add(animationDropDown);
@@ -619,6 +624,8 @@ class CharacterEditorState extends MusicBeatState
 	var imageInputText:FlxUIInputText;
 	var healthIconInputText:FlxUIInputText;
 	var vocalsInputText:FlxUIInputText;
+	var animationPoseScale:FlxUINumericStepper;
+
 
 	var singDurationStepper:FlxUINumericStepper;
 	var scaleStepper:FlxUINumericStepper;
@@ -726,7 +733,7 @@ class CharacterEditorState extends MusicBeatState
 		UI_characterbox.addGroup(tab_group);
 	}
 
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
+		override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id != FlxUIInputText.CHANGE_EVENT && id != FlxUINumericStepper.CHANGE_EVENT) return;
 
 		if(sender is FlxUIInputText)
@@ -803,6 +810,14 @@ class CharacterEditorState extends MusicBeatState
 			{
 				character.healthColorArray[2] = Math.round(healthColorStepperB.value);
 				updateHealthBar();
+			}
+			// [NOVO] Atualização em tempo real do Scale Pose
+			else if (sender == animationPoseScale)
+			{
+				if(character.animationsArray[curAnim] != null) {
+					character.animationsArray[curAnim].poseScale = animationPoseScale.value;
+					character.playAnim(character.animationsArray[curAnim].anim, true);
+				}
 			}
 		}
 	}
@@ -1347,6 +1362,11 @@ class CharacterEditorState extends MusicBeatState
 		if(animList.length < 1) animList.push('NO ANIMATIONS'); //Prevents crash
 
 		animationDropDown.setData(FlxUIDropDownMenu.makeStrIdLabelArray(animList, true));
+		
+		if(character.animationsArray[curAnim] != null && animationPoseScale != null) {
+		        var anim:AnimArray = character.animationsArray[curAnim];
+		        AnimationPoseScale.value = (anim.poseScale != null && anim.poseScale > 0) ? anim.poseScale : 1;
+		}        
 	}
 
 	// save
