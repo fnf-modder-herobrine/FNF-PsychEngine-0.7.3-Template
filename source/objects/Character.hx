@@ -47,6 +47,7 @@ class Character extends FlxSprite
 	 * In case a character is missing, it will use this on its place
 	**/
 	public static final DEFAULT_CHARACTER:String = 'bf';
+	public var imageFiles:Array<String> = [];
 
 	public var animOffsets:Map<String, Array<Dynamic>>;
 	public var debugMode:Bool = false;
