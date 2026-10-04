@@ -23,6 +23,7 @@ import objects.Bar;
 class CharacterEditorState extends MusicBeatState
 {
 	var character:Character;
+	var animationPoseScale:FlxUINumericStepper;
 	var ghost:FlxSprite;
 	var animateGhost:FlxAnimate;
 	var animateGhostImage:String;
