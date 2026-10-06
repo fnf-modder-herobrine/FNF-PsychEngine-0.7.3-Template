@@ -174,7 +174,9 @@ class CharacterTestState extends backend.MusicBeatState
                 var direction:Int = Std.int(currentNote[1]) % 4;
 
                 // Força o bot ou player a fazer a animação de Sing
-                character.playAnim(character.singAnimations[direction], true);
+                // Lógica que você criou, mas adaptada para rodar direto no seu State!
+                var singAnims:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+                character.playAnim(singAnims[direction], true);
                 character.holdTimer = 0;
 
                 // Seta acende no Confirm
