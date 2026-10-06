@@ -625,7 +625,7 @@ class CharacterEditorState extends MusicBeatState
 	var imageInputText:FlxUIInputText;
 	var healthIconInputText:FlxUIInputText;
 	var vocalsInputText:FlxUIInputText;
-	var animationPoseScale:FlxUINumericStepper;
+	//var animationPoseScale:FlxUINumericStepper;
 
 
 	var singDurationStepper:FlxUINumericStepper;
