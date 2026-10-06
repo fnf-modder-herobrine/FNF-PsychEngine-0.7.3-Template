@@ -6,7 +6,7 @@ import flixel.effects.FlxFlicker;
 import lime.app.Application;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
-import tea.backend.creates.SScript;
+import psychlua.HScript;
 #if sys
 import sys.FileSystem;
 #end
