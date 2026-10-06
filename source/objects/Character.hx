@@ -54,7 +54,7 @@ class Character extends FlxSprite
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	public var isPlayer:Bool = false;
-	public var isAnimateAtlas:Bool = false;
+	//public var isAnimateAtlas:Bool = false;
     public var atlasSprite:FlxAnimate = null;
 	public var curCharacter:String = DEFAULT_CHARACTER;
 
