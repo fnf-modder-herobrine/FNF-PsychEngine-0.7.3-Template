@@ -51,7 +51,7 @@ class MainMenuState extends MusicBeatState
 
 		#if MODS_ALLOWED
 		// 1. Define o caminho do arquivo de script dentro da pasta de mods do celular
-		var menuScript:String = Paths.mods('data/states/MainMenuState.hx');
+		var menuScript:String = Paths.mods('states/MainMenuState.hx');
 		
 		// 2. Verifica se o modder colocou o arquivo MainMenuState.hx lá
 		if (sys.FileSystem.exists(menuScript)) {
