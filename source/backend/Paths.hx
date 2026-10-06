@@ -242,7 +242,7 @@ class Paths
 			return currentTrackedAssets.get(file);
 		}
 		else if (FileSystem.exists(file))
-			bitmap = BitmapData.fromFile(file);
+			bitmap = BitmapData.fromImage(lime.graphics.Image.fromFile(file));
 		else
 		#end
 		{
