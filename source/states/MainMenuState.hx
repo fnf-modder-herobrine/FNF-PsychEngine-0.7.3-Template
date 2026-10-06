@@ -56,7 +56,7 @@ class MainMenuState extends MusicBeatState
 		// 2. Verifica se o modder colocou o arquivo MainMenuState.hx lá
 		if (sys.FileSystem.exists(menuScript)) {
 			// 3. Inicializa o SScript carregando o arquivo externo
-			var scriptInit = new tea.backend.creates.SScript(menuScript);
+			var scriptInit = new psychlua.HScript(menuScript);
 			
 			// 4. Passa as funções e classes essenciais da Psych Engine e do Flixel para o script usar
 			scriptInit.set("this", this);
