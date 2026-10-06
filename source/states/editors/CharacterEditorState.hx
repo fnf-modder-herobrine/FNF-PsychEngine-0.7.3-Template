@@ -1366,7 +1366,7 @@ class CharacterEditorState extends MusicBeatState
 		
 		if(character.animationsArray[curAnim] != null && animationPoseScale != null) {
 		        var anim:AnimArray = character.animationsArray[curAnim];
-		        AnimationPoseScale.value = (anim.poseScale != null && anim.poseScale > 0) ? anim.poseScale : 1;
+		        animationPoseScale.value = (anim.poseScale != null && anim.poseScale > 0) ? anim.poseScale : 1;
 		}        
 	}
 
