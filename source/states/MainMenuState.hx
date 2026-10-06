@@ -6,6 +6,10 @@ import flixel.effects.FlxFlicker;
 import lime.app.Application;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
+import tea.backend.creates.SScript;
+#if sys
+import sys.FileSystem;
+#end
 
 class MainMenuState extends MusicBeatState
 {
@@ -38,12 +42,42 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
-	override function create()
+		override function create()
 	{
 		#if MODS_ALLOWED
 		Mods.pushGlobalMods();
 		#end
 		Mods.loadTopMod();
+
+		#if MODS_ALLOWED
+		// 1. Define o caminho do arquivo de script dentro da pasta de mods do celular
+		var menuScript:String = Paths.mods('data/states/MainMenuState.hx');
+		
+		// 2. Verifica se o modder colocou o arquivo MainMenuState.hx lá
+		if (sys.FileSystem.exists(menuScript)) {
+			// 3. Inicializa o SScript carregando o arquivo externo
+			var scriptInit = new tea.backend.creates.SScript(menuScript);
+			
+			// 4. Passa as funções e classes essenciais da Psych Engine e do Flixel para o script usar
+			scriptInit.set("this", this);
+			scriptInit.set("add", add);
+			scriptInit.set("remove", remove);
+			scriptInit.set("controls", controls); // Importante para ler o teclado/toques no mobile
+			scriptInit.set("FlxG", flixel.FlxG);
+			scriptInit.set("FlxSprite", flixel.FlxSprite);
+			scriptInit.set("Paths", Paths);
+			scriptInit.set("ClientPrefs", ClientPrefs);
+			
+			// 5. Executa o script do mod
+			scriptInit.execute();
+			
+			// 6. Roda o create base do motor gráfico e interrompe o resto do menu original da Psych
+			super.create();
+			return; 
+		}
+		#end
+
+		// ... O RESTO DO CÓDIGO ORIGINAL DA PSYCH ENGINE DA VERSÃO 0.7.3 CONTINUA ABAIXO ...
 
 		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
