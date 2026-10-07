@@ -563,4 +563,5 @@ class Character extends FlxSprite
 		if (atlas != null)
 			atlas = FlxDestroyUtil.destroy(atlas);
 	}
+		#end
 } // <- ESSA DEVE SER A ÚLTIMA CHAVE DO ARQUIVO INTEIRO!
