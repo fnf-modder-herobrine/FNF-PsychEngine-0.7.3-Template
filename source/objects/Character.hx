@@ -552,7 +552,7 @@ class Character extends FlxSprite
 		}
 	}
 
-	public override function destroy()
+		public override function destroy()
 	{
 		super.destroy();
 		destroyAtlas();
@@ -563,6 +563,4 @@ class Character extends FlxSprite
 		if (atlas != null)
 			atlas = FlxDestroyUtil.destroy(atlas);
 	}
-	#end
-}
-}
+} // <- ESSA DEVE SER A ÚLTIMA CHAVE DO ARQUIVO INTEIRO!
