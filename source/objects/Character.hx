@@ -175,17 +175,16 @@ class Character extends FlxSprite
 				frames = atlasSprite.frames;
 
 			case "MultiSparrow":
-				// Garante que o array imageMS existe e não está vazio
 				if (json.imageMS != null && json.imageMS.length > 0) 
 				{
-					// Pega o primeiro atlas da lista do imageMS
-					var firstAtlas = Paths.getAtlas(json.imageMS[0]);
+					// CORREÇÃO: Passando o índice [0] para pegar a primeira String da lista!
+					var firstAtlas = Paths.getAtlas(json.imageMS[0]); 
 					if (firstAtlas != null) 
 					{
 						var multiFrames = new MultiFramesCollection(firstAtlas.parent);
 						multiFrames.addFrames(firstAtlas);
 
-						// Loop por todas as outras imagens extras da lista
+						// Loop para juntar as outras partes do array
 						for (i in 1...json.imageMS.length) 
 						{
 							var extraAtlas = Paths.getAtlas(json.imageMS[i]);
@@ -196,12 +195,10 @@ class Character extends FlxSprite
 						frames = multiFrames;
 					}
 					else {
-						// Se falhar o primeiro, tenta carregar o padrão para não dar crash
 						frames = Paths.getAtlas(json.image);
 					}
 				} 
 				else {
-					// Se esqueceu de preencher o imageMS, usa a imagem padrão
 					frames = Paths.getAtlas(json.image);
 				}
 
