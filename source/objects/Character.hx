@@ -39,7 +39,10 @@ typedef CharacterFile = {
 	var no_antialiasing:Bool;
 	var healthbar_colors:Array<Int>;
 	var vocals_file:String;
-	var ?imageMS:Array<String>; // A nossa linha que adicionamos antes
+	
+	// Adicione estas duas linhas abaixo:
+	var ?renderType:String;     // Pode ser "MultiSparrow", "AnimateAtlas", ou vazio para o padrão
+	var ?imageMS:Array<String>; // Lista de imagens para o MultiSparrow ["char_part1", "char_part2"]
 }
 class Character extends FlxSprite
 {
