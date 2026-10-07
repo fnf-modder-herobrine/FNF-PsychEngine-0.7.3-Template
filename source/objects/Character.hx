@@ -39,7 +39,7 @@ typedef CharacterFile = {
 	var no_antialiasing:Bool;
 	var healthbar_colors:Array<Int>;
 	var vocals_file:String;
-	var ?images:Array<String>; // A nossa linha que adicionamos antes
+	var ?imageMS:Array<String>; // A nossa linha que adicionamos antes
 }
 class Character extends FlxSprite
 {
@@ -168,7 +168,7 @@ class Character extends FlxSprite
 		else
 		{
 			// O SEU SISTEMA DE MULTI-SPRITESHEETS CONTINUA AQUI INTACTO:
-			if (json.images != null && Std.isOfType(json.images, Array) && json.images.length > 0) 
+			if (json.imageMS != null && Std.isOfType(json.imageMS, Array) && json.images.length > 0) 
 			{
 				var firstAtlas = Paths.getAtlas(json.images[0]);
 				if (firstAtlas != null) 
