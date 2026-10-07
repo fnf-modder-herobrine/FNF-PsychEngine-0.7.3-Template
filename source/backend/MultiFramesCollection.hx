@@ -45,9 +45,13 @@ class MultiFramesCollection extends FlxFramesCollection
 		}
 	}
 
-	public override function destroy():Void
+		public override function destroy():Void
 	{
 		if(parentedFrames != null) {
+			// Limpa o conteúdo de forma segura antes de anular
+			while(parentedFrames.length > 0) {
+				parentedFrames.pop();
+			}
 			parentedFrames = null;
 		}
 		super.destroy();
