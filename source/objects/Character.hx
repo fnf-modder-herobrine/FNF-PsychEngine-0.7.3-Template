@@ -157,42 +157,56 @@ class Character extends FlxSprite
 		updateHitbox();
 
 					// Forçamos a checagem para ver se o JSON manda ativar o Atlas
-		isAnimateAtlas = (json.scale_atlas == true);
-
-		if(isAnimateAtlas)
-		{
-			// O FlxAnimate precisa ler a pasta inteira onde estão o Animation.json e o spritemap1.json
-			// Paths.getPath('images/' + json.image, TEXT) faz a engine ler o caminho como uma pasta de texto/assets
-			atlasSprite = new flxanimate.FlxAnimate(0, 0, Paths.getPath('images/' + json.image, TEXT));
-			
-			// Passamos os frames gerados pelo FlxAnimate para o esqueleto do personagem
-			frames = atlasSprite.frames;
+				// Detecta o tipo de renderização de forma segura
+		var currentRenderType:String = "Sparrow"; // Padrão clássico do FNF
+		
+		if (json.renderType != null) {
+			currentRenderType = json.renderType;
+		} else if (json.scale_atlas == true) {
+			currentRenderType = "AnimateAtlas"; // Mantém compatibilidade com mapas antigos do Adobe Animate
 		}
-		else
-		{
-			// O SEU SISTEMA DE MULTI-SPRITESHEETS CONTINUA AQUI INTACTO:
-			if (json.imageMS != null && Std.isOfType(json.imageMS, Array) && json.images.length > 0) 
-			{
-				var firstAtlas = Paths.getAtlas(json.images[0]);
-				if (firstAtlas != null) 
-				{
-					var multiFrames = new MultiFramesCollection(firstAtlas.parent);
-					multiFrames.addFrames(firstAtlas);
 
-					for (i in 1...json.images.length) 
+		// Sistema organizado por RenderType
+		switch(currentRenderType)
+		{
+			case "AnimateAtlas":
+				// O FlxAnimate precisa ler a pasta inteira onde estão o Animation.json e o spritemap1.json
+				atlasSprite = new flxanimate.FlxAnimate(0, 0, Paths.getPath('images/' + json.image, TEXT));
+				frames = atlasSprite.frames;
+
+			case "MultiSparrow":
+				// Garante que o array imageMS existe e não está vazio
+				if (json.imageMS != null && json.imageMS.length > 0) 
+				{
+					// Pega o primeiro atlas da lista do imageMS
+					var firstAtlas = Paths.getAtlas(json.imageMS[0]);
+					if (firstAtlas != null) 
 					{
-						var extraAtlas = Paths.getAtlas(json.images[i]);
-						if (extraAtlas != null) {
-							multiFrames.addFrames(extraAtlas);
+						var multiFrames = new MultiFramesCollection(firstAtlas.parent);
+						multiFrames.addFrames(firstAtlas);
+
+						// Loop por todas as outras imagens extras da lista
+						for (i in 1...json.imageMS.length) 
+						{
+							var extraAtlas = Paths.getAtlas(json.imageMS[i]);
+							if (extraAtlas != null) {
+								multiFrames.addFrames(extraAtlas);
+							}
 						}
+						frames = multiFrames;
 					}
-					frames = multiFrames;
+					else {
+						// Se falhar o primeiro, tenta carregar o padrão para não dar crash
+						frames = Paths.getAtlas(json.image);
+					}
+				} 
+				else {
+					// Se esqueceu de preencher o imageMS, usa a imagem padrão
+					frames = Paths.getAtlas(json.image);
 				}
-			} 
-			else 
-			{
+
+			default: // "Sparrow" padrão do jogo
 				frames = Paths.getAtlas(json.image);
-			}
 		}
 		#if flxanimate
 		#else
@@ -553,4 +567,5 @@ class Character extends FlxSprite
 			atlas = FlxDestroyUtil.destroy(atlas);
 	}
 	#end
+}
 }
