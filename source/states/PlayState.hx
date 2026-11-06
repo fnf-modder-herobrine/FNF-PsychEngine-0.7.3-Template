@@ -23,6 +23,7 @@ import haxe.Json;
 
 import cutscenes.CutsceneHandler;
 import cutscenes.DialogueBoxPsych;
+import objects.StrumLines;
 
 import states.StoryMenuState;
 import states.FreeplayState;
@@ -449,16 +450,58 @@ class PlayState extends MusicBeatState
 			startCharacterScripts(gf.curCharacter);
 		}
 
+				// 1. Criamos os grupos normais do Psych (para manter compatibilidade de camadas/layers)
+		// mas agora vamos popular nossas StrumLines estilo Codename!
+
+		// --- CONFIGURAÇÃO DA STRUMLINE DO OPONENTE ---
+		var oponentes:Array<Character> = [];
+		
+		// Oponente Principal (Padrão do Psych para não quebrar o motor)
 		dad = new Character(0, 0, SONG.player2);
 		startCharacterPos(dad, true);
 		dadGroup.add(dad);
 		startCharacterScripts(dad.curCharacter);
+		oponentes.push(dad);
 
+		// [MODO CODENAME] Aqui você pode dar push em quantos oponentes extras quiser!
+		// Exemplo de oponente extra nativo:
+		
+		var dadExtra = new Character(dad.x - 200, dad.y, 'pico-player');
+		startCharacterPos(dadExtra, true);
+		dadGroup.add(dadExtra);
+		startCharacterScripts(dadExtra.curCharacter);
+		oponentes.push(dadExtra);
+		
+
+		// Criamos a StrumLine do Oponente passando o Array de personagens e a posição inicial das setas
+		var oponenteStrumLine = new StrumLine(oponentes, FlxPoint.get(100, 50), 0.7, true, true, "dad");
+		strumLines.push(openteStrumLine);
+
+
+		// --- CONFIGURAÇÃO DA STRUMLINE DO JOGADOR ---
+		var jogadores:Array<Character> = [];
+
+		// Jogador Principal
 		boyfriend = new Character(0, 0, SONG.player1, true);
 		startCharacterPos(boyfriend);
 		boyfriendGroup.add(boyfriend);
 		startCharacterScripts(boyfriend.curCharacter);
+		jogadores.push(boyfriend);
 
+		// [MODO CODENAME] Quer outro namorado ou parceiro ajudando a cantar na mesma linha? Só dar push:
+		
+		var bfExtra = new Character(boyfriend.x + 200, boyfriend.y, 'bf-car', true);
+		startCharacterPos(bfExtra);
+		boyfriendGroup.add(bfExtra);
+		startCharacterScripts(bfExtra.curCharacter);
+		jogadores.push(bfExtra);
+
+		// Criamos a StrumLine do Jogador
+		var jogadorStrumLine = new StrumLine(jogadores, FlxPoint.get(700, 50), 0.7, false, false, "bf");
+		strumLines.push(jogadorStrumLine);
+
+		// --- CONFIGURAÇÃO DA GF (SEGUE O FLUXO PADRÃO COM AJUSTES) ---
+				
 		var camPos:FlxPoint = FlxPoint.get(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
 		if(gf != null)
 		{
