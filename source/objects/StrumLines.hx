@@ -1,4 +1,4 @@
-package funkin.game;
+package objects;
 
 import objects.Character;
 import objects.StrumNote;
