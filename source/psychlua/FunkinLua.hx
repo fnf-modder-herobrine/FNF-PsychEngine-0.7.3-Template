@@ -4,6 +4,7 @@ package psychlua;
 import backend.WeekData;
 import backend.Highscore;
 import backend.Song;
+import objects.StrumLines;
 
 import openfl.Lib;
 import openfl.utils.Assets;
