@@ -74,13 +74,18 @@
       "name": "flxanimate",
       "type": "git",
       "dir": null,
-      "ref": "dev",
+      "ref": "master",
       "url": "https://github.com/ShadowMario/flxanimate.git"
     }, 
     {
       "name": "hx-astcenc",
       "type": "haxelib",
       "version": null
-    }
+    },
+    {
+      "name": "funkin-modchart",
+      "type": "haxelib",
+      "version": "1.2.5"
+    }  
   ]
 }
