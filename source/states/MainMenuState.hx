@@ -41,6 +41,7 @@ class MainMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
+	var isCustom:Bool = false;
 
 		override function create()
 	{
@@ -73,6 +74,7 @@ class MainMenuState extends MusicBeatState
 			
 			// 6. Roda o create base do motor gráfico e interrompe o resto do menu original da Psych
 			super.create();
+			isCustom = true;
 			return; 
 		}
 		#end
@@ -166,6 +168,11 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		if (isCustom) {
+            super.update(elapsed);
+            return;
+        }
+		
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * elapsed;
