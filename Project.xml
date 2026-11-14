@@ -101,7 +101,12 @@
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
 	<haxelib name="flxanimate"/>
-	<haxelib name="hx-astcenc" />	
+	<haxelib name="hx-astcenc" />
+
+	<haxelib name="FM_ENGINE" value="PSYCH"/>
+	<haxelib name="FM_ENGINE_VERSION" value="0.7.3"/>
+	<habelib name="funkin-modchart" />
+	<haxeflag name="--macro" value="modchart.backend.Macro.incluideFiles()"/>	
 
 	<!-- Disable Discord IO Thread -->
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc" />
