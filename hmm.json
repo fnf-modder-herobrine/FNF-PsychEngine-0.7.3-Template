@@ -2,8 +2,10 @@
   "dependencies": [
     {
       "name": "funkin-modchart",
-      "type": "haxelib",
-      "version": "1.2.5"
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com"
     },
     {
       "name": "lime",
