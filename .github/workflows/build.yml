@@ -58,6 +58,8 @@ jobs:
         run: |
           haxelib install hmm --quiet
           haxelib run hmm install --quiet
+          haxelib set flixel 5.5.0
+          haxelib set lime git
 
       - name: Configure Android x64
         if: inputs.name == 'Android x64'
