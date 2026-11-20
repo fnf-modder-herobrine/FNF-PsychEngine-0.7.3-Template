@@ -1403,13 +1403,20 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 			for (songNotes in section.sectionNotes)
 			{
 				var daStrumTime:Float = songNotes[0];
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
-				var gottaHitNote:Bool = section.mustHitSection;
+			var rawData:Int = Std.int(songNotes[1]);
+var daNoteData:Int = rawData % 4;
+var gottaHitNote:Bool = section.mustHitSection;
+var daStrumLine:Int = 0;
 
-				if (songNotes[1] > 3)
-				{
-					gottaHitNote = !section.mustHitSection;
-				}
+if (rawData > 3 && rawData < 8)
+	gottaHitNote = !section.mustHitSection;
+else if (rawData >= 8)
+{
+	daStrumLine = Std.int(rawData / 4) - 1; // 8-11 = 1, 12-15 = 2...
+	var extras = SONG.extraLines != null ? SONG.extraLines : [];
+	var line = extras[daStrumLine - 1];
+	gottaHitNote = (line != null) ? line.player : false;
+}
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
@@ -1419,6 +1426,7 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 				swagNote.mustPress = gottaHitNote;
+				swagNote.strumLine = daStrumLine;
 				swagNote.sustainLength = songNotes[2];
 				swagNote.gfNote = (section.gfSection && (songNotes[1]<4));
 				swagNote.noteType = songNotes[3];
@@ -1438,6 +1446,7 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 
 						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData, oldNote, true);
 						sustainNote.mustPress = gottaHitNote;
+						sustainNote.strumLine = daStrumLine;
 						sustainNote.gfNote = (section.gfSection && (songNotes[1]<4));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
@@ -2986,6 +2995,12 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 		// play character anims
 		var char:Character = boyfriend;
 		if((note != null && note.gfNote) || (SONG.notes[curSection] != null && SONG.notes[curSection].gfSection)) char = gf;
+		
+	    if (note != null && note.strumLine > 0 && !note.gfNote)
+{
+	var s = getSingers(note, true);
+	if (s.length > 0) char = s[0]; // só o primeiro faz a animação de miss
+}
 
 		if(char != null && (note == null || !note.noMissAnimation) && char.hasMissAnimations)
 		{
@@ -3023,15 +3038,13 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 				if (SONG.notes[curSection].altAnim && !SONG.notes[curSection].gfSection)
 					altAnim = '-alt';
 
-			var char:Character = dad;
 			var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, note.noteData)))] + altAnim;
-			if(note.gfNote) char = gf;
-
-			if(char != null)
-			{
-				char.playAnim(animToPlay, true);
-				char.holdTimer = 0;
-			}
+for (char in getSingers(note, false))
+{
+	if(char == null) continue;
+	char.playAnim(animToPlay, true);
+	char.holdTimer = 0;
+}
 		}
 
 		if(opponentVocals.length <= 0) vocals.volume = 1;
@@ -3078,31 +3091,22 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 			return;
 		}
 
-		if(!note.noAnimation) {
-			var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, note.noteData)))];
+	if(!note.noAnimation) {
+	var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, note.noteData)))];
+	var animCheck:String = note.gfNote ? 'cheer' : 'hey';
+	for (char in getSingers(note, true))
+	{
+		if(char == null) continue;
+		char.playAnim(animToPlay + note.animSuffix, true);
+		char.holdTimer = 0;
 
-			var char:Character = boyfriend;
-			var animCheck:String = 'hey';
-			if(note.gfNote)
-			{
-				char = gf;
-				animCheck = 'cheer';
-			}
-
-			if(char != null)
-			{
-				char.playAnim(animToPlay + note.animSuffix, true);
-				char.holdTimer = 0;
-
-				if(note.noteType == 'Hey!') {
-					if(char.animOffsets.exists(animCheck)) {
-						char.playAnim(animCheck, true);
-						char.specialAnim = true;
-						char.heyTimer = 0.6;
-					}
-				}
-			}
+		if(note.noteType == 'Hey!' && char.animOffsets.exists(animCheck)) {
+			char.playAnim(animCheck, true);
+			char.specialAnim = true;
+			char.heyTimer = 0.6;
 		}
+	}
+}
 
 		if(!cpuControlled)
 		{
@@ -3242,6 +3246,11 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 			boyfriend.dance();
 		if (dad != null && beat % dad.danceEveryNumBeats == 0 && !dad.getAnimationName().startsWith('sing') && !dad.stunned)
 			dad.dance();
+		
+		for (list in extraChars)
+	for (c in list)
+		if (c != null && c != dad && c != boyfriend && c != gf && beat % c.danceEveryNumBeats == 0 && !c.getAnimationName().startsWith('sing') && !c.stunned)
+			c.dance();		
 	}
 
 	public function playerDance():Void
@@ -3249,6 +3258,15 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 		var anim:String = boyfriend.getAnimationName();
 		if(boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 #if FLX_PITCH / FlxG.sound.music.pitch #end) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss'))
 			boyfriend.dance();
+			
+		for (list in extraChars)
+	for (c in list)
+	{
+		if (c == null || c == boyfriend || !c.isPlayer) continue;
+		var a:String = c.getAnimationName();
+		if(c.holdTimer > Conductor.stepCrochet * (0.0011 #if FLX_PITCH / FlxG.sound.music.pitch #end) * c.singDuration && a.startsWith('sing') && !a.endsWith('miss'))
+			c.dance();
+	}	
 	}
 
 	override function sectionHit()
