@@ -5,6 +5,13 @@ import lime.utils.Assets;
 
 import backend.Section;
 
+// NOVO: strumline extra (alem das 2 padrao)
+typedef ExtraStrumLine =
+{
+	var chars:Array<String>; // personagens que cantam nessa strumline
+	var player:Bool;         // true = voce joga, false = oponente (CPU)
+}
+
 typedef SwagSong =
 {
 	var song:String;
@@ -28,6 +35,9 @@ typedef SwagSong =
 
 	@:optional var arrowSkin:String;
 	@:optional var splashSkin:String;
+
+	// NOVO: lista de strumlines extras (noteData 8-11 = extra 1, 12-15 = extra 2...)
+	@:optional var extraLines:Array<ExtraStrumLine>;
 }
 
 class Song
@@ -49,9 +59,14 @@ class Song
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
+	public var extraLines:Array<ExtraStrumLine> = []; // NOVO
 
 	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
 	{
+		// NOVO: garante que extraLines nunca seja null
+		if(songJson.extraLines == null)
+			songJson.extraLines = [];
+
 		if(songJson.gfVersion == null)
 		{
 			songJson.gfVersion = songJson.player3;
@@ -119,22 +134,6 @@ class Song
 			rawJson = rawJson.substr(0, rawJson.length - 1);
 			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
 		}
-
-		// FIX THE CASTING ON WINDOWS/NATIVE
-		// Windows???
-		// trace(songData);
-
-		// trace('LOADED FROM JSON: ' + songData.notes);
-		/* 
-			for (i in 0...songData.notes.length)
-			{
-				trace('LOADED FROM JSON: ' + songData.notes[i].sectionNotes);
-				// songData.notes[i].sectionNotes = songData.notes[i].sectionNotes
-			}
-
-				daNotes = songData.notes;
-				daSong = songData.song;
-				daBpm = songData.bpm; */
 
 		var songJson:Dynamic = parseJSONshit(rawJson);
 		if(jsonInput != 'events') StageData.loadDirectory(songJson);
