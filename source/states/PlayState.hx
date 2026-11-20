@@ -31,7 +31,7 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
-import modchart.Manager;
+// import modchart.Manager;
 
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
@@ -129,7 +129,7 @@ class PlayState extends MusicBeatState
 	public var noteKillOffset:Float = 350;
 
 	public var playbackRate(default, set):Float = 1;
-	public var funkinModchart:Manager;
+	//public var funkinModchart:Manager;
 
 	public var boyfriendGroup:FlxSpriteGroup;
 	public var dadGroup:FlxSpriteGroup;
@@ -1035,8 +1035,8 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
-			funkinModchart = new Manager();
-			add(funkinModchart);
+			//funkinModchart = new Manager();
+			//add(funkinModchart);
 			
 			for (i in 0...playerStrums.length) {
 				setOnScripts('defaultPlayerStrumX' + i, playerStrums.members[i].x);
