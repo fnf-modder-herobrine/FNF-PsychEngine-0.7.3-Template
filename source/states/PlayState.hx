@@ -23,7 +23,6 @@ import haxe.Json;
 
 import cutscenes.CutsceneHandler;
 import cutscenes.DialogueBoxPsych;
-import objects.StrumLines;
 
 import states.StoryMenuState;
 import states.FreeplayState;
@@ -158,6 +157,7 @@ class PlayState extends MusicBeatState
 	public var dad:Character = null;
 	public var gf:Character = null;
 	public var boyfriend:Character = null;
+	public var extraChars:Array<Array<Character>> = []; // extraChars[0] = extra 1 (noteData 8-11)...
 
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
@@ -456,51 +456,17 @@ class PlayState extends MusicBeatState
 		// mas agora vamos popular nossas StrumLines estilo Codename!
 
 		// --- CONFIGURAÇÃO DA STRUMLINE DO OPONENTE ---
-		var oponentes:Array<Character> = [];
-		
-		// Oponente Principal (Padrão do Psych para não quebrar o motor)
 		dad = new Character(0, 0, SONG.player2);
-		startCharacterPos(dad, true);
-		dadGroup.add(dad);
-		startCharacterScripts(dad.curCharacter);
-		oponentes.push(dad);
+        startCharacterPos(dad, true);
+        dadGroup.add(dad);
+        startCharacterScripts(dad.curCharacter);
 
-		// [MODO CODENAME] Aqui você pode dar push em quantos oponentes extras quiser!
-		// Exemplo de oponente extra nativo:
-		
-		var dadExtra = new Character(dad.x - 200, dad.y, 'pico-player');
-		startCharacterPos(dadExtra, true);
-		dadGroup.add(dadExtra);
-		startCharacterScripts(dadExtra.curCharacter);
-		oponentes.push(dadExtra);
-		
+        boyfriend = new Character(0, 0, SONG.player1, true);
+        startCharacterPos(boyfriend);
+        boyfriendGroup.add(boyfriend);
+        startCharacterScripts(boyfriend.curCharacter);
 
-		// Criamos a StrumLine do Oponente passando o Array de personagens e a posição inicial das setas
-		var oponenteStrumLine = new StrumLine(oponentes, FlxPoint.get(100, 50), 0.7, true, true, "dad");
-		strumLines.push(openteStrumLine);
-
-
-		// --- CONFIGURAÇÃO DA STRUMLINE DO JOGADOR ---
-		var jogadores:Array<Character> = [];
-
-		// Jogador Principal
-		boyfriend = new Character(0, 0, SONG.player1, true);
-		startCharacterPos(boyfriend);
-		boyfriendGroup.add(boyfriend);
-		startCharacterScripts(boyfriend.curCharacter);
-		jogadores.push(boyfriend);
-
-		// [MODO CODENAME] Quer outro namorado ou parceiro ajudando a cantar na mesma linha? Só dar push:
-		
-		var bfExtra = new Character(boyfriend.x + 200, boyfriend.y, 'bf-car', true);
-		startCharacterPos(bfExtra);
-		boyfriendGroup.add(bfExtra);
-		startCharacterScripts(bfExtra.curCharacter);
-		jogadores.push(bfExtra);
-
-		// Criamos a StrumLine do Jogador
-		var jogadorStrumLine = new StrumLine(jogadores, FlxPoint.get(700, 50), 0.7, false, false, "bf");
-		strumLines.push(jogadorStrumLine);
+        createExtraCharacters();
 
 		// --- CONFIGURAÇÃO DA GF (SEGUE O FLUXO PADRÃO COM AJUSTES) ---
 				
@@ -884,6 +850,49 @@ class PlayState extends MusicBeatState
 		#end
 		return null;
 	}
+
+function createExtraCharacters():Void
+{
+	var lines = SONG.extraLines != null ? SONG.extraLines : [];
+	var oppCount:Int = 0;
+	var plrCount:Int = 0;
+	for (line in lines)
+	{
+		var list:Array<Character> = [];
+		for (name in line.chars)
+		{
+			var c:Character = null;
+			switch (name)
+			{
+				case '@dad': c = dad;
+				case '@bf': c = boyfriend;
+				case '@gf': c = gf;
+				default:
+					c = new Character(0, 0, name, line.player);
+					startCharacterPos(c, !line.player);
+					if (line.player) boyfriendGroup.add(c); else dadGroup.add(c);
+					// posição: empilha ao lado do principal (ajuste o 250 como quiser)
+					if (line.player) { plrCount++; c.x += 250 * plrCount; }
+					else { oppCount++; c.x -= 250 * oppCount; }
+					startCharacterScripts(c.curCharacter);
+			}
+			if (c != null) list.push(c);
+		}
+		extraChars.push(list);
+	}
+}
+
+public function getSingers(note:Note, isPlayer:Bool):Array<Character>
+{
+	if (note.gfNote) return gf != null ? [gf] : [];
+	if (note.strumLine > 0)
+	{
+		var l = extraChars[note.strumLine - 1];
+		if (l != null) return l;
+		return [];
+	}
+	return [isPlayer ? boyfriend : dad];
+}
 
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
 		if(gfCheck && char.curCharacter.startsWith('gf')) { //IF DAD IS GIRLFRIEND, HE GOES TO HER POSITION
