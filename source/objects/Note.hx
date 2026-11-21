@@ -77,7 +77,8 @@ class Note extends FlxSprite
 
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
-	public var strumLine:Int = 0; // 0 = oponente/jogador padrão, 1+ = strumline extra (índice em extraLines + 1)
+	public var strumLine:Int = 0;
+	public var coLines:Array<Int> = []; // strumlines extras (1, 2...) que cantam junto com esta nota 1)
 	public var earlyHitMult:Float = 1;
 	public var lateHitMult:Float = 1;
 	public var lowPriority:Bool = false;
