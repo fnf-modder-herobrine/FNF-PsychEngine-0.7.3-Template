@@ -9,7 +9,8 @@ import backend.Section;
 typedef ExtraStrumLine =
 {
 	var chars:Array<String>; // personagens que cantam nessa strumline
-	var player:Bool;         // true = voce joga, false = oponente (CPU)
+	var player:Bool; // true = voce joga, false = oponente (CPU)
+	@:optional var tag:String; // nome usado no Lua/HScript
 }
 
 typedef SwagSong =
