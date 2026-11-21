@@ -856,11 +856,14 @@ function createExtraCharacters():Void
 	var lines = SONG.extraLines != null ? SONG.extraLines : [];
 	var oppCount:Int = 0;
 	var plrCount:Int = 0;
-	for (line in lines)
+	for (li in 0...lines.length)
 	{
+		var line = lines[li];
+		var base:String = (line.tag != null && line.tag.length > 0) ? line.tag : 'extra' + (li + 1);
 		var list:Array<Character> = [];
-		for (name in line.chars)
+		for (ci in 0...line.chars.length)
 		{
+			var name:String = line.chars[ci];
 			var c:Character = null;
 			switch (name)
 			{
@@ -871,12 +874,15 @@ function createExtraCharacters():Void
 					c = new Character(0, 0, name, line.player);
 					startCharacterPos(c, !line.player);
 					if (line.player) boyfriendGroup.add(c); else dadGroup.add(c);
-					// posição: empilha ao lado do principal (ajuste o 250 como quiser)
 					if (line.player) { plrCount++; c.x += 250 * plrCount; }
 					else { oppCount++; c.x -= 250 * oppCount; }
 					startCharacterScripts(c.curCharacter);
 			}
-			if (c != null) list.push(c);
+			if (c != null)
+			{
+				list.push(c);
+				variables.set(ci == 0 ? base : base + (ci + 1), c); // 1º = "pico", 2º = "pico2"...
+			}
 		}
 		extraChars.push(list);
 	}
