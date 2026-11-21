@@ -1528,6 +1528,34 @@ else if (rawData >= 8)
 		for (event in songData.events) //Event Notes
 			for (i in 0...event[1].length)
 				makeEvent(event, i);
+		
+		// Funde notas extras que batem com uma nota principal
+var mainMap:Map<String, Note> = new Map<String, Note>();
+for (n in unspawnNotes)
+	if (n.strumLine == 0 && !n.isSustainNote)
+		mainMap.set((n.mustPress ? '1' : '0') + '_' + n.noteData + '_' + Math.round(n.strumTime), n);
+
+for (n in unspawnNotes)
+{
+	if (n.strumLine < 1 || n.isSustainNote) continue;
+	var main:Note = mainMap.get((n.mustPress ? '1' : '0') + '_' + n.noteData + '_' + Math.round(n.strumTime));
+	if (main == null || Math.abs(main.sustainLength - n.sustainLength) > 1) continue;
+
+	if (main.coLines.indexOf(n.strumLine) < 0) main.coLines.push(n.strumLine);
+	n.extraData.set('merged', true);
+	for (s in n.tail) s.extraData.set('merged', true);
+}
+
+var kept:Array<Note> = [];
+for (n in unspawnNotes)
+{
+	if (n.extraData.exists('merged')) n.destroy();
+	else kept.push(n);
+}
+unspawnNotes = kept;
+
+for (n in unspawnNotes) // sustains da nota principal herdam a lista
+	if (n.isSustainNote && n.parent != null && n.strumLine == 0) n.coLines = n.parent.coLines;				
 
 		unspawnNotes.sort(sortByTime);
 		generatedMusic = true;
@@ -1891,6 +1919,7 @@ else if (rawData >= 8)
 
 							var strum:StrumNote = strumGroup.members[daNote.noteData];
 							daNote.followStrumNote(strum, fakeCrochet, songSpeed / playbackRate);
+							if (daNote.strumLine > 0) daNote.visible = extraNotesVisible[daNote.strumLine - 1] != false;
 
 							if(daNote.mustPress)
 							{
