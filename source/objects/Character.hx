@@ -143,8 +143,25 @@ class Character extends FlxSprite
 				playAnim("shoot1");
 		}
 	}
+	
+	static function getFolderAtlas(folder:String):FlxAtlasFrames
+{
+	var combined:FlxAtlasFrames = null;
+	var i:Int = 0;
+	while (Paths.fileExists('images/$folder/$i.xml', TEXT))
+	{
+		var part:FlxAtlasFrames = Paths.getAtlas('$folder/$i');
+		if (part != null)
+		{
+			if (combined == null) combined = new FlxAtlasFrames(part.parent);
+			combined.addAtlas(part, true);
+		}
+		i++;
+	}
+	return combined;
+}
 
-	public function loadCharacterFile(json:Dynamic)
+		public function loadCharacterFile(json:Dynamic)
 	{
 		isAnimateAtlas = false;
 
@@ -157,57 +174,31 @@ class Character extends FlxSprite
 		scale.set(1, 1);
 		updateHitbox();
 
-					// Forçamos a checagem para ver se o JSON manda ativar o Atlas
-				// Detecta o tipo de renderização de forma segura
-		var currentRenderType:String = "Sparrow"; // Padrão clássico do FNF
-		
-		if (json.renderType != null) {
-			currentRenderType = json.renderType;
-		} else if (json.scale_atlas == true) {
-			currentRenderType = "AnimateAtlas"; // Mantém compatibilidade com mapas antigos do Adobe Animate
-		}
-
-		// Sistema organizado por RenderType
-		switch(currentRenderType)
+		if(!isAnimateAtlas)
 		{
-			case "AnimateAtlas":
-				// O FlxAnimate precisa ler a pasta inteira onde estão o Animation.json e o spritemap1.json
-				atlasSprite = new flxanimate.FlxAnimate(0, 0, Paths.getPath('images/' + json.image, TEXT));
-				frames = atlasSprite.frames;
+			// COLE O BLOCO AQUI DENTRO:
+			var currentRenderType:String = (json.renderType != null) ? json.renderType : "Sparrow";
+			var merged:FlxAtlasFrames = null;
 
-			case "MultiSparrow":
-				if (json.imageMS != null && json.imageMS.length > 0) 
+			if (currentRenderType == "MultiSparrow")
+			{
+				if (json.imageMS != null && json.imageMS.length > 0)
 				{
-					// CORREÇÃO: Passando o índice [0] para pegar a primeira String da lista!
-					var firstAtlas = Paths.getAtlas(json.imageMS[0]); 
-					if (firstAtlas != null) 
+					for (name in (json.imageMS : Array<String>))
 					{
-						var multiFrames = new MultiFramesCollection(firstAtlas.parent);
-						multiFrames.addFrames(firstAtlas);
-
-						// Loop para juntar as outras partes do array
-						for (i in 1...json.imageMS.length) 
-						{
-							var extraAtlas = Paths.getAtlas(json.imageMS[i]);
-							if (extraAtlas != null) {
-								multiFrames.addFrames(extraAtlas);
-							}
-						}
-						frames = multiFrames;
+						var part:FlxAtlasFrames = Paths.getAtlas(name);
+						if (part == null) continue;
+						if (merged == null) merged = new FlxAtlasFrames(part.parent);
+						merged.addAtlas(part, true);
 					}
-					else {
-						frames = Paths.getAtlas(json.image);
-					}
-				} 
-				else {
-					frames = Paths.getAtlas(json.image);
 				}
+				else merged = getFolderAtlas(json.image);
+			}
 
-			default: // "Sparrow" padrão do jogo
-				frames = Paths.getAtlas(json.image);
+			frames = (merged != null) ? merged : Paths.getAtlas(json.image);
 		}
 		#if flxanimate
-		#else
+		else
 		{
 			atlas = new FlxAnimate();
 			atlas.showPivot = false;
@@ -422,7 +413,7 @@ class Character extends FlxSprite
 	{
 		specialAnim = false;
 		if(!isAnimateAtlas) animation.play(AnimName, Force, Reversed, Frame);
-		else atlasSprite.anim.play(AnimName, Force, Reversed, Frame);
+		else atlas.anim.play(AnimName, Force, Reversed, Frame);
 
 		// [NOVO] Lógica do Scale Pose Dinâmico
 		var appliedScale:Float = jsonScale; // Usa a escala base do personagem como padrão
