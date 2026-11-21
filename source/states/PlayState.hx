@@ -158,6 +158,16 @@ class PlayState extends MusicBeatState
 	public var gf:Character = null;
 	public var boyfriend:Character = null;
 	public var extraChars:Array<Array<Character>> = []; // extraChars[0] = extra 1 (noteData 8-11)...
+	public var extraNotesVisible:Array<Bool> = [];
+    public var extraTags:Array<String> = [];
+    public function setExtraNotesVisible(line:Dynamic, visible:Bool):Void
+{
+	var idx:Int = -1;
+	if (Std.isOfType(line, String)) idx = extraTags.indexOf(line);
+	else idx = Std.int(Std.parseFloat(Std.string(line))) - 1;
+	if (idx < 0 || idx >= extraNotesVisible.length) return;
+	extraNotesVisible[idx] = visible;
+}
 
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
@@ -894,10 +904,18 @@ public function getSingers(note:Note, isPlayer:Bool):Array<Character>
 	if (note.strumLine > 0)
 	{
 		var l = extraChars[note.strumLine - 1];
-		if (l != null) return l;
-		return [];
+		return l != null ? l : [];
 	}
-	return [isPlayer ? boyfriend : dad];
+
+	var result:Array<Character> = [isPlayer ? boyfriend : dad];
+	for (ln in note.coLines) // extras fundidas com esta nota
+	{
+		var l = extraChars[ln - 1];
+		if (l != null)
+			for (c in l)
+				if (c != null && result.indexOf(c) < 0) result.push(c);
+	}
+	return result;
 }
 
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
