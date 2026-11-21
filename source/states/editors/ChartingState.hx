@@ -3017,12 +3017,7 @@ function changeStrumPage(change:Int):Void
 		nextRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
 		nextRenderedNotes.clear();
 		nextRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
-		nextRenderedSustains.clear();
-		for (i in _song.notes[curSec].sectionNotes)
-{
-	if(Std.int(i[1] / 8) != strumPage) continue; // NOVO
-	var note:Note = setupNoteData(i, false);
-	
+		nextRenderedSustains.clear();	
 
 		if (_song.notes[curSec].changeBPM && _song.notes[curSec].bpm > 0)
 		{
