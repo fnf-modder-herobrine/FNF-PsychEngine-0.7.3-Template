@@ -8,11 +8,12 @@ import flixel.util.FlxDestroyUtil;
 import openfl.utils.AssetType;
 import openfl.utils.Assets;
 import haxe.Json;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 import backend.Song;
 import backend.Section;
 import states.stages.objects.TankmenBG;
-import backend.MultiFramesCollection;
+//import backend.MultiFramesCollection;
 import flxanimate.FlxAnimate;
 
 typedef AnimArray = {
