@@ -84,6 +84,9 @@ class Note extends FlxSprite
 	public var lowPriority:Bool = false;
 
 	public static var SUSTAIN_SIZE:Int = 44;
+	public static var wiggleAmp:Float = 0;     // altura da onda em pixels (0 = desligado)
+    public static var wiggleFreq:Float = 0.01; // quantas ondas ao longo do sustain
+    public static var wiggleSpeed:Float = 0.01; // velocidade com que a onda se mexe
 	public static var swagWidth:Float = 160 * 0.7;
 	public static var colArray:Array<String> = ['purple', 'blue', 'green', 'red'];
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
