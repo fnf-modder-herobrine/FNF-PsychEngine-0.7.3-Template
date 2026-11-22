@@ -467,12 +467,13 @@ class Note extends FlxSprite
 		_lastValidChecked = '';
 	}
 
-	inline function wiggleAt(py:Float, strumY:Float, t:Float):Float
+	/**inline function wiggleAt(py:Float, strumY:Float, t:Float):Float
 {
 	var a:Float = wiggleAmp;
 	if(wiggleRamp > 0) a *= Math.min(1, Math.abs(py - strumY) / wiggleRamp);
 	return Math.sin(py * wiggleFreq + t) * a;
-}				
+}
+**/
 
 	public function followStrumNote(myStrum:StrumNote, fakeCrochet:Float, songSpeed:Float = 1)
 	{
