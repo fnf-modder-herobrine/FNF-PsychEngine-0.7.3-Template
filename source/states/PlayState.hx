@@ -32,6 +32,7 @@ import states.editors.CharacterEditorState;
 import substates.PauseSubState;
 import substates.GameOverSubstate;
 // import modchart.Manager;
+import shaders.WiggleEffect;
 
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
