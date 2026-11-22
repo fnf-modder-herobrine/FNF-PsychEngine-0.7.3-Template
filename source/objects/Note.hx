@@ -482,8 +482,12 @@ class Note extends FlxSprite
 		if(copyAlpha)
 			alpha = strumAlpha * multAlpha;
 
-		if(copyX)
-			x = strumX + offsetX + Math.cos(angleDir) * distance;
+	    if(copyX)
+{
+	x = strumX + offsetX + Math.cos(angleDir) * distance;
+	if(isSustainNote && wiggleAmp != 0)
+		x += Math.sin((strumTime * wiggleFreq) + (Conductor.songPosition * wiggleSpeed)) * wiggleAmp;
+}
 
 		if(copyY)
 		{
