@@ -9,6 +9,7 @@ import shaders.RGBPalette.RGBShaderReference;
 import objects.StrumNote;
 
 import flixel.math.FlxRect;
+import flixel.addons.effects.FlxSkewedSprite;
 
 using StringTools;
 
