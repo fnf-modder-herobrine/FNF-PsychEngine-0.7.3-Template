@@ -88,6 +88,7 @@ class Note extends FlxSprite
     public static var wiggleFreq:Float = 0.01; // quantas ondas ao longo do sustain
     public static var wiggleSpeed:Float = 0.01; // velocidade com que a onda se mexe
 	public static var wiggleRamp:Float = 0; // distância (px) da seta até a onda chegar na força total (0 = sem rampa)
+	public var wiggle:Bool = true; // false = esta nota não ondula
 	public static var swagWidth:Float = 160 * 0.7;
 	public static var colArray:Array<String> = ['purple', 'blue', 'green', 'red'];
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
@@ -507,7 +508,7 @@ class Note extends FlxSprite
 		}
 		if(isSustainNote)
 {
-	if(wiggleAmp != 0 && copyX)
+	if(wiggle && wiggleAmp != 0 && copyX)
 	{
 		var t:Float = Conductor.songPosition * wiggleSpeed;
 		var y0:Float = y;
