@@ -9,7 +9,7 @@ enum WiggleEffectType
 	HEAT_WAVE_VERTICAL;
 	FLAG;
 }
-
+@:keep
 class WiggleEffect
 {
 	public var shader(default, null):WiggleShader = new WiggleShader();
@@ -61,7 +61,7 @@ class WiggleEffect
 		return v;
 	}
 }
-
+@:keep
 class WiggleShader extends FlxShader
 {
 	@:glFragmentSource('
