@@ -9,7 +9,7 @@ import shaders.RGBPalette.RGBShaderReference;
 import objects.StrumNote;
 
 import flixel.math.FlxRect;
-import flixel.addons.effects.FlxSkewedSprite;
+//import flixel.addons.effects.FlxSkewedSprite;
 
 using StringTools;
 
@@ -85,11 +85,11 @@ class Note extends FlxSprite
 	public var lowPriority:Bool = false;
 
 	public static var SUSTAIN_SIZE:Int = 44;
-	public static var wiggleAmp:Float = 0;     // altura da onda em pixels (0 = desligado)
-    public static var wiggleFreq:Float = 0.01; // quantas ondas ao longo do sustain
-    public static var wiggleSpeed:Float = 0.01; // velocidade com que a onda se mexe
-	public static var wiggleRamp:Float = 0; // distância (px) da seta até a onda chegar na força total (0 = sem rampa)
-	public var wiggle:Bool = true; // false = esta nota não ondula
+	//public static var wiggleAmp:Float = 0;     // altura da onda em pixels (0 = desligado)
+   // public static var wiggleFreq:Float = 0.01; // quantas ondas ao longo do sustain
+    //public static var wiggleSpeed:Float = 0.01; // velocidade com que a onda se mexe
+	//public static var wiggleRamp:Float = 0; // distância (px) da seta até a onda chegar na força total (0 = sem rampa)
+	//public var wiggle:Bool = true; // false = esta nota não ondula
 	public static var swagWidth:Float = 160 * 0.7;
 	public static var colArray:Array<String> = ['purple', 'blue', 'green', 'red'];
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
@@ -507,20 +507,6 @@ class Note extends FlxSprite
 				y -= (frameHeight * scale.y) - (Note.swagWidth / 2);
 			}
 		}
-		if(isSustainNote)
-{
-	if(wiggle && wiggleAmp != 0 && copyX)
-	{
-		var t:Float = Conductor.songPosition * wiggleSpeed;
-		var y0:Float = y;
-		var y1:Float = y + height;
-		var s0:Float = wiggleAt(y0, strumY, t);
-		var s1:Float = wiggleAt(y1, strumY, t);
-		x += (s0 + s1) / 2;
-		skew.x = Math.atan((s1 - s0) / Math.max(1, y1 - y0)) * 180 / Math.PI;
-	}
-	else if(skew.x != 0) skew.x = 0;
-}
 	}
 
 	public function clipToStrumNote(myStrum:StrumNote)
