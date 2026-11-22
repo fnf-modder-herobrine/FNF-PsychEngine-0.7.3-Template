@@ -3234,7 +3234,7 @@ for (char in getSingers(note, false))
 		FlxG.animationTimeScale = 1;
 		#if FLX_PITCH FlxG.sound.music.pitch = 1; #end
 		Note.globalRgbShaders = [];
-		Note.wiggleAmp = 0;
+		//Note.wiggleAmp = 0;
 		backend.NoteTypesConfig.clearNoteTypesData();
 		instance = null;
 		super.destroy();
