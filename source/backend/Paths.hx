@@ -16,6 +16,9 @@ import lime.utils.Assets;
 import flash.media.Sound;
 
 import haxe.Json;
+#if android
+import openfl.display.ASTCBitmapData;
+#end
 
 
 #if MODS_ALLOWED
@@ -218,6 +221,29 @@ class Paths
 		var inst = returnSound(null, songKey, 'songs');
 		return inst;
 	}
+
+	#if android
+static var _astcSupport:Null<Bool> = null;
+static var astcFailed:Array<String> = [];
+
+static function useASTC(key:String):Bool
+{
+	if (astcFailed.contains(key)) return false;
+	if (_astcSupport == null)
+	{
+		try { _astcSupport = ASTCBitmapData.isSupportASTCConfig(); }
+		catch(e:Dynamic) { _astcSupport = false; }
+	}
+	return _astcSupport;
+}
+
+static function loadASTC(bytes:haxe.io.Bytes):BitmapData
+{
+	try { return ASTCBitmapData.fromBytes(bytes); }
+	catch(e:Dynamic) { trace('Falha ao decodificar ASTC: $e'); }
+	return null;
+}
+#end
 
 		public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxGraphic
