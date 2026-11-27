@@ -902,6 +902,11 @@ add(nextPageBtn);
 
 			updateGrid();
 		});
+		
+		var insertSectionButton:FlxButton = new FlxButton(duetButton.x + 200, duetButton.y, "Add section", function()
+{
+	insertSection();
+});
 
 		tab_group_section.add(new FlxText(stepperBeats.x, stepperBeats.y - 15, 0, 'Beats per Section:'));
 		tab_group_section.add(stepperBeats);
@@ -920,6 +925,7 @@ add(nextPageBtn);
 		tab_group_section.add(copyLastButton);
 		tab_group_section.add(duetButton);
 		tab_group_section.add(mirrorButton);
+		tab_group_section.add(insertSectionButton);
 
 		UI_box.addGroup(tab_group_section);
 	}
