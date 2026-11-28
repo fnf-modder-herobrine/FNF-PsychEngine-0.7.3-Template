@@ -296,39 +296,39 @@ class Tank extends BaseStage
 		};
 
 		cutsceneHandler.timer(15.2, function()
-		{
-			FlxTween.tween(camFollow, {x: 650, y: 300}, 1, {ease: FlxEase.sineOut});
-			FlxTween.tween(FlxG.camera, {zoom: 0.9 * 1.2 * 1.2}, 2.25, {ease: FlxEase.quadInOut});
+{
+	FlxTween.tween(camFollow, {x: 650, y: 300}, 1, {ease: FlxEase.sineOut});
+	FlxTween.tween(FlxG.camera, {zoom: 0.9 * 1.2 * 1.2}, 2.25, {ease: FlxEase.quadInOut});
 
-			pico.anim.play('dieBitch', true);
+	pico.anim.play('dieBitch', true);
+	pico.anim.onComplete.addOnce(function()
+	{
+		pico.anim.play('picoAppears', true);
+		pico.anim.onComplete = function()
+		{
+			pico.anim.play('picoEnd', true);
 			pico.anim.onComplete.addOnce(function()
 			{
-				pico.anim.play('picoAppears', true);
-				pico.anim.onComplete = function()
-				{
-					pico.anim.play('picoEnd', true);
-					pico.anim.onComplete.addOnce(function()
-					{
-						gfGroup.alpha = 1;
-						pico.visible = false;
-						pico.anim.onComplete = null;
-					}
-				};
+				gfGroup.alpha = 1;
+				pico.visible = false;
+				pico.anim.onComplete = null;
+			});   // <- era "}" e faltava ");"
+		};
 
-				boyfriendGroup.alpha = 1;
-				boyfriendCutscene.visible = false;
-				boyfriend.playAnim('bfCatch', true);
+		boyfriendGroup.alpha = 1;
+		boyfriendCutscene.visible = false;
+		boyfriend.playAnim('bfCatch', true);
 
-				boyfriend.animation.finishCallback = function(name:String)
-				{
-					if(name != 'idle')
-					{
-						boyfriend.playAnim('idle', true);
-						boyfriend.animation.curAnim.finish(); //Instantly goes to last frame
-					}
-				};
-			};
-		});
+		boyfriend.animation.finishCallback = function(name:String)
+		{
+			if(name != 'idle')
+			{
+				boyfriend.playAnim('idle', true);
+				boyfriend.animation.curAnim.finish(); //Instantly goes to last frame
+			}
+		};
+	});   // <- era "};" e faltava o ")"
+});
 
 		cutsceneHandler.timer(17.5, function()
 		{
