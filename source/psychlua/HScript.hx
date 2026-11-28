@@ -84,6 +84,7 @@ class HScript extends SScript
 		super.preset();
 
 		// Some very commonly used classes
+		set('game', Playstate.instance);
 		set('FlxG', flixel.FlxG);
 		set('FlxMath', flixel.math.FlxMath);
 		set('FlxSprite', flixel.FlxSprite);
@@ -114,6 +115,39 @@ class HScript extends SScript
 		#if flxanimate
 		set('FlxAnimate', FlxAnimate);
 		#end
+		set('FlxText', flixel.text.FlxText);
+        set('FlxTextBorderStyle', flixel.text.FlxText.FlxTextBorderStyle);
+        set('FlxGroup', flixel.group.FlxGroup);
+        set('FlxTypedGroup', flixel.group.FlxTypedGroup);
+        set('FlxSpriteGroup', flixel.group.FlxSpriteGroup);
+        set('FlxTrail', flixel.addons.effects.FlxTrail);
+        set('FlxBackdrop', flixel.addons.display.FlxBackdrop);
+        set('FlxSound', flixel.sound.FlxSound);
+        set('FlxBar', flixel.ui.FlxBar);
+        set('FlxObject', flixel.FlxObject);
+        set('FlxAxes', flixel.util.FlxAxes);
+		set('StrumNote', objects.StrumNote);
+        set('NoteSplash', objects.NoteSplash);
+        set('HealthIcon', objects.HealthIcon);
+        set('BGSprite', objects.BGSprite);
+        set('AttachedSprite', objects.AttachedSprite);
+        set('AttachedText', objects.AttachedText);
+        set('FunkinLua', psychlua.FunkinLua);
+        set('LuaUtils', psychlua.LuaUtils);
+        set('CoolUtil', backend.CoolUtil);
+        set('Song', backend.Song);
+        set('Highscore', backend.Highscore);
+        set('Controls', backend.Controls);
+        set('MusicBeatState', backend.MusicBeatState);
+        set('MusicBeatSubstate', backend.MusicBeatSubstate);
+		set('BlendMode', openfl.display.BlendMode);
+        set('Lib', openfl.Lib);
+        set('Assets', openfl.utils.Assets);
+        set('Std', Std);
+        set('Math', Math);
+        set('Type', Type);
+        set('Reflect', Reflect);
+        set('Json', haxe.Json);	
 
 		// Functions & Variables
 		set('setVar', function(name:String, value:Dynamic) {
