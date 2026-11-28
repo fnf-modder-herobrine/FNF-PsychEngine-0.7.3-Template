@@ -720,7 +720,7 @@ static function loadASTC(bytes:haxe.io.Bytes):BitmapData
 		//trace(folderOrImg);
 		//trace(spriteJson);
 		//trace(animationJson);
-		spr.loadAtlasEx(folderOrImg, spriteJson, animationJson);
+		spr.loadAtlas(folderOrImg);
 	}
 
 	/*private static function getContentFromFile(path:String):String
