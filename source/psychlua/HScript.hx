@@ -125,7 +125,7 @@ class HScript extends SScript
         set('FlxSound', flixel.sound.FlxSound);
         set('FlxBar', flixel.ui.FlxBar);
         set('FlxObject', flixel.FlxObject);
-        set('FlxAxes', flixel.util.FlxAxes);
+        set('FlxAxes', CustomFlxAxes);
 		set('StrumNote', objects.StrumNote);
         set('NoteSplash', objects.NoteSplash);
         set('HealthIcon', objects.HealthIcon);
@@ -577,5 +577,11 @@ class CustomFlxColor {
 	{
 		return cast FlxColor.fromString(str);
 	}
+}
+class CustomFlxAxes {
+	public static var NONE(default, null):Int = cast flixel.util.FlxAxes.NONE;
+	public static var X(default, null):Int = cast flixel.util.FlxAxes.X;
+	public static var Y(default, null):Int = cast flixel.util.FlxAxes.Y;
+	public static var XY(default, null):Int = cast flixel.util.FlxAxes.XY;
 }
 #end
