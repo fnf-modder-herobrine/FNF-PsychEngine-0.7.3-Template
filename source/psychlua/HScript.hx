@@ -147,7 +147,8 @@ class HScript extends SScript
         set('Math', Math);
         set('Type', Type);
         set('Reflect', Reflect);
-        set('Json', haxe.Json);	
+        set('Json', haxe.Json);
+		set('WiggleEffect', shaders.WiggleEffect);
 
 		// Functions & Variables
 		set('setVar', function(name:String, value:Dynamic) {
