@@ -84,7 +84,7 @@ class HScript extends SScript
 		super.preset();
 
 		// Some very commonly used classes
-		set('game', Playstate.instance);
+		set('game', PlayState.instance);
 		set('FlxG', flixel.FlxG);
 		set('FlxMath', flixel.math.FlxMath);
 		set('FlxSprite', flixel.FlxSprite);
