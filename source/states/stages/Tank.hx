@@ -300,34 +300,37 @@ class Tank extends BaseStage
 	FlxTween.tween(camFollow, {x: 650, y: 300}, 1, {ease: FlxEase.sineOut});
 	FlxTween.tween(FlxG.camera, {zoom: 0.9 * 1.2 * 1.2}, 2.25, {ease: FlxEase.quadInOut});
 
+	var picoStep:Int = 0;
 	pico.anim.play('dieBitch', true);
-	pico.anim.onComplete.addOnce(function()
+	pico.anim.onComplete.add(function()
 	{
-		pico.anim.play('picoAppears', true);
-		pico.anim.onComplete = function()
+		picoStep++;
+		switch(picoStep)
 		{
-			pico.anim.play('picoEnd', true);
-			pico.anim.onComplete.addOnce(function()
-			{
+			case 1:
+				pico.anim.play('picoAppears', true);
+
+				boyfriendGroup.alpha = 1;
+				boyfriendCutscene.visible = false;
+				boyfriend.playAnim('bfCatch', true);
+
+				boyfriend.animation.finishCallback = function(name:String)
+				{
+					if(name != 'idle')
+					{
+						boyfriend.playAnim('idle', true);
+						boyfriend.animation.curAnim.finish(); //Instantly goes to last frame
+					}
+				};
+
+			case 2:
+				pico.anim.play('picoEnd', true);
+
+			case 3:
 				gfGroup.alpha = 1;
 				pico.visible = false;
-				pico.anim.onComplete = null;
-			});   // <- era "}" e faltava ");"
-		};
-
-		boyfriendGroup.alpha = 1;
-		boyfriendCutscene.visible = false;
-		boyfriend.playAnim('bfCatch', true);
-
-		boyfriend.animation.finishCallback = function(name:String)
-		{
-			if(name != 'idle')
-			{
-				boyfriend.playAnim('idle', true);
-				boyfriend.animation.curAnim.finish(); //Instantly goes to last frame
-			}
-		};
-	});   // <- era "};" e faltava o ")"
+		}
+	});
 });
 
 		cutsceneHandler.timer(17.5, function()
