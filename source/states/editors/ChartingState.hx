@@ -3227,6 +3227,49 @@ function changeStrumPage(change:Int):Void
 		_song.notes.push(sec);
 	}
 
+	function insertSection(sectionBeats:Float = 4):Void
+	{
+		var idx:Int = curSec + 1; // use "curSec" para inserir ANTES da atual
+
+		// BPM em vigor no ponto da inserção
+		var daBPM:Float = _song.bpm;
+		for (i in 0...idx)
+			if (_song.notes[i] != null && _song.notes[i].changeBPM) daBPM = _song.notes[i].bpm;
+
+		var insertTime:Float = sectionStartTime(idx - curSec);
+		var duration:Float = sectionBeats * (1000 * 60 / daBPM);
+
+		// empurra as notas das seções seguintes
+		for (i in idx..._song.notes.length)
+			for (n in _song.notes[i].sectionNotes)
+			{
+				var t:Float = n[0];
+				n[0] = t + duration;
+			}
+
+		// empurra os eventos que vêm depois
+		for (ev in _song.events)
+		{
+			var et:Float = ev[0];
+			if (et >= insertTime) ev[0] = et + duration;
+		}
+
+		var sec:SwagSection = {
+			sectionBeats: sectionBeats,
+			bpm: daBPM,
+			changeBPM: false,
+			mustHitSection: _song.notes[curSec].mustHitSection,
+			gfSection: false,
+			sectionNotes: [],
+			altAnim: false
+		};
+		_song.notes.insert(idx, sec);
+
+		Conductor.mapBPMChanges(_song);
+		curSelectedNote = null;
+		changeSection(idx); // vai para a seção nova
+	}				
+
 	function selectNote(note:Note):Void
 {
 	var noteDataToCheck:Int = rawOf(note);
