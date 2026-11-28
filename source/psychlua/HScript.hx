@@ -140,7 +140,7 @@ class HScript extends SScript
         set('Controls', backend.Controls);
         set('MusicBeatState', backend.MusicBeatState);
         set('MusicBeatSubstate', backend.MusicBeatSubstate);
-		set('BlendMode', openfl.display.BlendMode);
+		set('BlendMode', CustomBlendMode);
         set('Lib', openfl.Lib);
         set('Assets', openfl.utils.Assets);
         set('Std', Std);
@@ -583,5 +583,21 @@ class CustomFlxAxes {
 	public static var X(default, null):Int = cast flixel.util.FlxAxes.X;
 	public static var Y(default, null):Int = cast flixel.util.FlxAxes.Y;
 	public static var XY(default, null):Int = cast flixel.util.FlxAxes.XY;
+}
+class CustomBlendMode {
+	public static var ADD(default, null):Dynamic = openfl.display.BlendMode.ADD;
+	public static var ALPHA(default, null):Dynamic = openfl.display.BlendMode.ALPHA;
+	public static var DARKEN(default, null):Dynamic = openfl.display.BlendMode.DARKEN;
+	public static var DIFFERENCE(default, null):Dynamic = openfl.display.BlendMode.DIFFERENCE;
+	public static var ERASE(default, null):Dynamic = openfl.display.BlendMode.ERASE;
+	public static var HARDLIGHT(default, null):Dynamic = openfl.display.BlendMode.HARDLIGHT;
+	public static var INVERT(default, null):Dynamic = openfl.display.BlendMode.INVERT;
+	public static var LAYER(default, null):Dynamic = openfl.display.BlendMode.LAYER;
+	public static var LIGHTEN(default, null):Dynamic = openfl.display.BlendMode.LIGHTEN;
+	public static var MULTIPLY(default, null):Dynamic = openfl.display.BlendMode.MULTIPLY;
+	public static var NORMAL(default, null):Dynamic = openfl.display.BlendMode.NORMAL;
+	public static var OVERLAY(default, null):Dynamic = openfl.display.BlendMode.OVERLAY;
+	public static var SCREEN(default, null):Dynamic = openfl.display.BlendMode.SCREEN;
+	public static var SUBTRACT(default, null):Dynamic = openfl.display.BlendMode.SUBTRACT;
 }
 #end
